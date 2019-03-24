@@ -1,0 +1,7 @@
+*.pyc
+*.lock
+!/.gitignore
+**/__pycache__/
+**/virtv/
+__pycache__/
+!**/README
