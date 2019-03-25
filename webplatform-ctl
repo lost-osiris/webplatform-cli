@@ -1,7 +1,7 @@
 #!/bin/sh
 if [ -e "./controller/virtv/lib/" ]; then
   source ./controller/virtv/bin/activate
-  python ./controller/ceetools-ctl.py $@
+  python ./controller/webplatform-cli.py $@
 else
   echo "Building Virtual Environment"
   # setup controller
@@ -10,5 +10,5 @@ else
   pip install -r ./controller/virtv/requirements.txt
 
   echo "Done setting up Controller"
-  python ./controller/ceetools-ctl.py $@
+  python ./controller/webplatform-cli.py $@
 fi

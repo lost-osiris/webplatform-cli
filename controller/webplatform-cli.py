@@ -3,28 +3,24 @@
    # service-ctl [ --force --debug] <command> [<args>...]
    # service-ctl [ --force --debug] <command> [<args>...]
 """usage:
-   service-ctl [ --force --debug --instance INSTANCE] <command> [<args>...]
-   service-ctl (--version | --help)
+   webplatform-cli [ --force --debug ] <command> [<args>...]
+   webplatform-cli (--version | --help)
 
 options:
    -h --help                            Print this help message
    --version                            Show version
    -f --force                           Force the action being preformed
-   -i INSTANCE --instance=INSTANCE      Specify Instance [default: devel]
    -d --debug                           Enable controller debugging mode,
                                         for controller development only
 
 commands for the controller are:
-   build        Build containters
-   install      *not finished* Global dependancy install, requires root
+   setup        Build containters
    update       *not finished* Local dependancy update
-   start        Start  container
-   stop         Stop container
-   restart      Restart container
-   reset   Removes container then starts it again
-   tail         *not finished* Watch log files for services
+   start        Start
+   stop         Stop
+   restart      Restart
 
-See 'ceetools-ctl <command> -h' for more information on a specific command.
+See 'webplatform-cli <command> -h' for more information on a specific command.
 """
 import os
 import sys
@@ -32,16 +28,10 @@ import sys
 sys.dont_write_bytecode = True
 
 cmd = {
-   'start':{'type':'service','headless':False},
-   'stop':{'type':'service','headless':False},
-   'restart':{'type':'service','headless':False},
-   'reset':{'type':'service','headless':False},
-   'update':{'type':'service','headless':False},
-   'install':{'type':'noargs','headless':True},
-   'build':{'type':'build','headless':False},
-   'tail':{'type':'tail','headless':False},
-   'run':{'type':'run','headless':False},
-   'exec':{'type':'exec','headless':False},
+   'setup':{'type':'noargs','headless':False},
+   'start':{'type':'service','headless':True},
+   'restart':{'type':'service','headless':True},
+   'stop':{'type':'service','headless':True},
 }
 
 controller_path = os.path.dirname(os.path.realpath(__file__))
@@ -71,7 +61,7 @@ import json
 if __name__ == "__main__":
    import docker
    args = docopt(__doc__,
-               version='CEE-Tools Controller Version 1.0',
+               version='Web Platform CLI Version 1.0',
                options_first=True)
 
    if not args['<command>'] in list(cmd.keys()):

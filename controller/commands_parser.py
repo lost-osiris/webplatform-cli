@@ -1,5 +1,5 @@
 from dependencies.docopt import docopt
-from lib.utils.config import Settings
+from lib.config import Settings
 import sys
 
 settings = Settings()
