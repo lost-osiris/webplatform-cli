@@ -1,4 +1,3 @@
-from ldap3 import Server, Connection, AUTH_SIMPLE, ALL, ALL_ATTRIBUTES, SUBTREE
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from datetime import datetime, timedelta
