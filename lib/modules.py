@@ -34,12 +34,12 @@ class Modules(object):
       Modules.settings = settings
       Modules.base_path = settings.get_config("nginx")['api'] + "/lib"
       Modules.manager = Manager()
-      Modules.db = Modules.manager.db("cee-tools")
+      Modules.db = Modules.manager.db("webplatform")
       Modules.db.apis.remove({})
       self.__init_modules()
 
    def check_modules(self):
-      db = self.manager.db("cee-tools")
+      db = self.manager.db("webplatform")
       apis = db.apis.count()
 
       if apis == 0:
@@ -101,7 +101,7 @@ class Modules(object):
       return obj.call(*args, **kwargs)
 
    def get(self, module, data=False, init=None, set_modules=False, imported={}):
-      db = self.manager.db("cee-tools")
+      db = self.manager.db("webplatform")
 
       obj = db.apis.find_one({"module": module})
       permissions = db.permissions.find_one({"module": module})
@@ -139,7 +139,7 @@ class Modules(object):
          return obj['obj']
 
    def get_all_modules(self):
-      db = self.manager.db("cee-tools")
+      db = self.manager.db("webplatform")
       cursor = db.apis.find()
 
       output = {}
@@ -283,16 +283,6 @@ class Modules(object):
 
    def __add_module(self, module):
       self.db.apis.update({"module": module['module']}, {"$set": module}, upsert=True)
-      # old_module = self.db.apis.find_one({"module": module['module']})
-      #
-      # if old_module != None:
-      #    self.db.apis.update({"module": module['module']}, {"$set": module}, {"upsert": True})
-      # else:
-      #    self.db.apis.insert(module)
-
-      # old_module = self.db.permissions.find_one({"module": module['module']})
-      # if old_module == None:
-      #    old_module = self.db.permissions.insert({"module": module['module'], "permissions": [], "application": module['application']})
 
    def __get_application(self, module=None):
       return self.manager.get_application(module=module)
