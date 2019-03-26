@@ -1,9 +1,8 @@
-from lib.utils.config import Settings
+from lib.config import Settings
 import socket
 
 settings = Settings()
 base_path = settings.get_path()
-instance = settings.get_instance()
 
 volumes = {
    # "%s/application" % base_path: {
@@ -24,7 +23,7 @@ def add_volumes(add):
 
 def get_environment(service):
    return {
-      "HOST_MACHINE": socket.gethostbyname(socket.gethostname()),
-      "CEE_TOOLS_INSTANCE": instance,
-      "CEE_TOOLS_SERVICE": service,
+      #doesn't work on mac
+      # "HOST_MACHINE": socket.gethostbyname(socket.gethostname()),
+      "WEBPLATFORM_SERVICE": service,
    }

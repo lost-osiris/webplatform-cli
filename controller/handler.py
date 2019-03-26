@@ -31,9 +31,7 @@ class ContainerHandler:
             self.run_service(service, action)
 
    def run_service(self, service, action):
-      instance = self.settings.get_instance()
-
-      check = self.check_running(service, instance)
+      check = self.check_running(service)
       if type(check) is list:
          for check_container in check:
             container = self.__eval_container(check_container['container'], service, action, node=check_container['node'])
@@ -49,7 +47,6 @@ class ContainerHandler:
             print("Service ('%s') has encounter an error, either rebuild the container or start the container using the '-f' |'--force' flag." % service_name)
 
    def __eval_container(self, container, service, action, node=False):
-      instance = self.settings.get_instance()
       service_name = service
       if node:
          service_name = "%s_%s" % (service, node)
@@ -72,7 +69,7 @@ class ContainerHandler:
          if not container:
             print("You can only 'reset' a container if the container is currently running.\nStart the container and rerun the 'reset' command.")
             sys.exit()
-            
+
          print("Preforming a 'reset'. Removing and Restart Container.\n")
          print("Stopping '%s' container." % service)
          container.stop()
@@ -150,7 +147,7 @@ class ContainerHandler:
       if has_script:
          print("Found '%s' script for '%s' container.\nContainer output.\n" % (action, service))
 
-         cmd = '%s %s' % (new_action[action]['cmd'], instance)
+         cmd = '%s %s' % new_action[action]['cmd']
          output = container.exec_run(cmd, stream=True)
 
          try:
@@ -171,12 +168,11 @@ class ContainerHandler:
 
       return container
 
-   def create_network(self, instance):
-      network = self.client.networks.create(name="cee-tools-%s" % instance)
+   def create_network(self):
+      network = self.client.networks.create(name="webplatform")
       return network
 
    def create_container(self, service, node=False):
-      instance = self.settings.get_instance()
       base_path = self.settings.get_path()
 
       service = service.replace("-", "_")
@@ -184,27 +180,25 @@ class ContainerHandler:
       if node:
          service_name = "%s_%s" % (service, node)
 
-      network = self.check_network(instance)
+      network = self.check_network()
       if network == None:
-         network = self.create_network(instance)
+         network = self.create_network()
 
       settings = self.settings.get_config(service)
       if node:
          settings = settings[node]
 
-      path = "%s/setup/instances/%s/%s/create.py" % (base_path, instance, service_name)
-      container = imp.load_source(service, path)
-
+      container = imp.load_source(service, settings['container'])
       return container.create(self.client, network)
 
-   def check_running(self, service, instance):
+   def check_running(self, service):
       services = self.settings.get_service(service=service)
 
       if type(services) is list:
          containers = []
          for i in services:
             found = False
-            name = "cee-tools-%s-%s_%s" % (instance, service, i)
+            name = "webplatform-%s_%s" % (service, i)
             for container in self.client.containers.list(all=True):
                if name in container.name:
                   containers.append({'container': container, 'node': i})
@@ -216,31 +210,15 @@ class ContainerHandler:
          return containers
 
       else:
-         name = "cee-tools-%s-%s" % (instance, service)
+         name = "webplatform-%s" % service
          for container in self.client.containers.list(all=True):
             if name in container.name:
                return container
          return False
 
-   def check_network(self, instance):
-      name = "cee-tools-%s" % (instance)
+   def check_network(self):
+      name = "webplatform"
       for network in self.client.networks.list():
          if name in network.name:
             return network
       return None
-
-   def tail(self, service, follow):
-      instance = self.settings.get_instance()
-      container = self.check_running(service, instance)
-
-      if not container:
-         print("Container '%s' you reque")
-
-      if follow:
-         try:
-            for line in container.logs(follow=True):
-               print(line)
-         except KeyboardInterrupt:
-            sys.exit()
-      else:
-         print(container.logs())

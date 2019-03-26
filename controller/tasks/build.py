@@ -1,14 +1,13 @@
-from lib.utils.config import Settings
+from lib.config import Settings
 from docker import APIClient
 import os
 
 settings = Settings()
-instance = settings.get_instance()
 client = APIClient(base_url="unix://var/run/docker.sock")
 
 def build_base(service, path, force):
-   name = "cee-tools-base-%s" % service
-   image_name = 'cee-tools-base-%s:latest' % (service)
+   name = "webplatform-base-%s" % service
+   image_name = 'webplatform-base-%s:latest' % (service)
 
    print("Building base image for (%s)." % service)
    kwargs = {
@@ -28,14 +27,15 @@ def build_base(service, path, force):
       if "stream" in line: print(line['stream'])
    print("Done -- building base image for (%s)." % service)
 
-def run(service, path, force=False, base=True):
-   image_name = 'cee-tools-%s-%s:latest' % (instance, service)
+def run(service, path, context=None, force=False, base=True):
+   image_name = 'webplatform-%s:latest' % service
 
    if base:
       build_base(service.split("_")[0], base, force)
 
    dockerfile = path + 'Dockerfile'
-   context = os.path.abspath(os.path.join(path, '..', '..', 'common', service))
+   if not context:
+      context = path
 
    print("Building (%s) image." % service)
    kwargs = {

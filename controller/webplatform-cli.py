@@ -19,6 +19,7 @@ commands for the controller are:
    start        Start
    stop         Stop
    restart      Restart
+   reset        Reset
 
 See 'webplatform-cli <command> -h' for more information on a specific command.
 """
@@ -32,29 +33,21 @@ cmd = {
    'start':{'type':'service','headless':True},
    'restart':{'type':'service','headless':True},
    'stop':{'type':'service','headless':True},
+   'reset':{'type':'service','headless':True},
 }
 
 controller_path = os.path.dirname(os.path.realpath(__file__))
-virtv_path = controller_path + '/virtv/lib/'
-
 base_path = os.path.abspath(os.path.join(controller_path, '..'))
-app_path = base_path + '/api'
-python_version = os.listdir(virtv_path)
 
-deps_path = virtv_path + "/%s/site-packages/" % python_version
-
-if app_path not in sys.path:
-   sys.path.append(app_path)
+if base_path not in sys.path:
+   sys.path.append(base_path)
 
 if controller_path not in sys.path:
    sys.path.append(controller_path)
 
-if deps_path not in sys.path:
-   sys.path.append(deps_path)
-
 from dependencies.docopt import docopt
-from ctl import Docker
-from lib.utils.config import Settings
+from cli import Docker
+from lib.config import Settings
 
 import json
 
@@ -68,10 +61,9 @@ if __name__ == "__main__":
       sys.stderr.write(__doc__)
       sys.exit(1)
 
-   instance = args['--instance']
    verify = not cmd[args['<command>']]['headless']
 
-   settings = Settings(base_path, verify=verify, instance=instance)
+   settings = Settings(base_path, verify=verify)
 
    import commands_parser as parser
    subargs = getattr(parser, 'docopt_%s' % (cmd[args['<command>']]['type'],))(args['<command>'], args['<args>'])

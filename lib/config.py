@@ -22,7 +22,6 @@ class FileDoesNotExist(BaseConfigError):
 class Settings(object):
    __base_path = None
    __object = None
-   __instance = None
    __services = None
    __config = None
    __config_paths = None
@@ -34,10 +33,10 @@ class Settings(object):
 
       return Settings.__object
 
-   def __init__(self, path=None, verify=None, instance="devel"):
+   def __init__(self, path=None, verify=None):
       self.setup()
 
-   def __set_class(self, path, verify, instance):
+   def __set_class(self, path, verify):
       if path is None:
          path = Settings.__base_path
       else:
@@ -49,9 +48,8 @@ class Settings(object):
          self.verify = False
 
       Settings.__base_path = path
-      Settings.__instance = instance
 
-      Settings.__config_paths = self.__find_configs(instance)
+      Settings.__config_paths = self.__find_configs()
       Settings.__services = self.__services
 
       Settings.__config = {}
@@ -62,8 +60,21 @@ class Settings(object):
       self.__config_paths = Settings.__config_paths
       self.__config = Settings.__config
       self.__services = Settings.__services
-      self.__instance = Settings.__instance
       self.__bath_path = Settings.__base_path
+
+   def get_service(self, service=None):
+      if service != None:
+         found = False
+         for i in self.__services:
+            if service == i:
+               found = True
+
+         if not found:
+            if service in self.__config.keys():
+               return [i for i in self.__config[service].keys() if i != "multiple"]
+         else:
+            return service
+      return self.__services
 
    def get_actions(self, service):
       actions = {
@@ -81,6 +92,7 @@ class Settings(object):
          }
       }
 
+      # Currently no implementation under new cli
       path = "%s/setup/instances/common/%s/actions" % (self.__base_path, service)
 
       try:
@@ -99,29 +111,10 @@ class Settings(object):
       except OSError:
          return actions
 
+   def __find_configs(self):
+      path = "%s/settings/" % self.__base_path
 
-   def get_service(self, service=None):
-      if service != None:
-         found = False
-         for i in self.__services:
-            if service == i:
-               found = True
-
-         if not found:
-            if service in self.__config.keys():
-               return [i for i in self.__config[service].keys() if i != "multiple"]
-         else:
-            return service
-      return self.__services
-
-   def __find_configs(self, instance):
-      path = "%s/setup/instances/%s" % (self.__base_path, self.__instance)
-
-      # try:
-      services = [i for i in os.listdir(path) if "settings" not in i and "common" not in i]
-      # except OSError:
-      #    print("Instance doesn't exist")
-      #    sys.exit()
+      services = [i.replace(".json", "") for i in os.listdir(path) if "settings" not in i and "common" not in i and "cli" not in i]
 
       configs = {}
       for i in services:
@@ -130,14 +123,14 @@ class Settings(object):
          if len(service) > 1:
             if service[0] not in configs.keys():
                configs[service[0]] = {
-                  service[1]: "%s/settings/%s.json" % (path, i),
+                  service[1]: "%s/%s.json" % (path, i),
                   'multiple': True,
                }
             else:
-               configs[service[0]][service[1]] = "%s/settings/%s.json" % (path, i)
+               configs[service[0]][service[1]] = "%s/%s.json" % (path, i)
 
          else:
-            configs[service[0]] = "%s/settings/%s.json" % (path, i)
+            configs[service[0]] = "%s/%s.json" % (path, i)
 
       self.__services = services
 
@@ -157,12 +150,12 @@ class Settings(object):
          if isinstance(path, str):
             self.__config[i] = self.__load_config(path)
 
-      path = "%s/setup/instances/%s/settings/" % (self.__base_path, self.__instance)
-      for i in os.listdir(path):
-         if "_" not in i and i[0] != ".":
-            config = i.split(".json")[0]
-            if config not in self.__config.keys():
-               self.__config[config] = self.__load_config(path + i)
+      # path = "%s/settings/" % self.__base_path
+      # for i in os.listdir(path):
+      #    if "_" not in i and i[0] != ".":
+      #       config = i.split(".json")[0]
+      #       if config not in self.__config.keys():
+      #          self.__config[config] = self.__load_config(path + i)
 
    def __load_config(self, path):
       try:
@@ -406,7 +399,7 @@ class Settings(object):
 
       for config_type in list(self.__config_paths.keys()):
          for key, value in list(self.__config[config_type].items()):
-            base_key = "CEE_TOOLS_" + config_type.upper() + "_" + key.replace("-", "_").upper()
+            base_key = "WEBPLATFORM_" + config_type.upper() + "_" + key.replace("-", "_").upper()
 
             if (isinstance(value, str) and value[0] == "/") or (isinstance(value, dict) and config_type != "mongodb"):
                environ_key, environ_value = self.__process_config(base_key, value, self.__config_paths[config_type])
@@ -420,13 +413,10 @@ class Settings(object):
                   environ[base_key] = str(value)
 
                else:
-                  environ_key = "CEE_TOOLS_" + config_type.upper() + "_"  + key.replace("-", "_").upper()
+                  environ_key = "_" + config_type.upper() + "_"  + key.replace("-", "_").upper()
                   environ[base_key] = str(value)
 
       return environ
-
-   def get_instance(self):
-      return self.__instance
 
    def get_path(self):
       return self.__base_path
