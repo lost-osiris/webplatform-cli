@@ -5,4 +5,7 @@ db/data/**
 **/__pycache__/
 **/virtv/
 __pycache__/
+.DS_Store
+dist/
 !**/README
+webplatform_cli.egg-info/
