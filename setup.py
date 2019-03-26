@@ -2,7 +2,7 @@
 from setuptools import setup
 
 setup(name = "webplatform-cli",
-   version = "1.0",
+   version = "1.0.2",
    description = "CLI used for a webplatform",
    author = "Matthew Owens",
    author_email = "mowens@redhat.com",
@@ -13,7 +13,7 @@ setup(name = "webplatform-cli",
       'pymongo'
    ],
    license='MIT',
-   scripts = ["webplatform-cli"],
+   scripts = ["controller/webplatform-cli.py"],
    long_description = """TODO""",
    classifiers = [
        "Programming Language :: Python :: 3",

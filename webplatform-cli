@@ -5,7 +5,7 @@ if [ -e "./controller/virtv/lib/" ]; then
 else
   echo "Building Virtual Environment"
   # setup controller
-  virtualenv -p /usr/bin/python3 ./controller/virtv/
+  virtualenv -p python3 ./controller/virtv/
   source ./controller/virtv/bin/activate
   pip install -r ./controller/virtv/requirements.txt
 
