@@ -2,21 +2,17 @@
 from setuptools import setup, find_packages
 
 setup(name = "webplatform-cli",
-   version = "1.0.11",
+   version = "1.0.21",
    description = "CLI used for a webplatform",
    author = "Matthew Owens",
    author_email = "mowens@redhat.com",
    url = "https://github.com/lost-osiris/webplatform-cli",
    # packages = ['lib', 'controller'],
    packages = find_packages(exclude=("db", "settings")),
-   # package_data={
-   #    '': [
-   #       'settings/*',
-   #       'db/docker/*',
-   #       'db/data/README.md'
-   #    ]
-   # },
-   include_package_data = True,
+   # data_files = (
+   #    ('db', ['db']),
+   #    ('settings', ['settings'])
+   # ),
    install_requires = [
       'docker',
       'pymongo'

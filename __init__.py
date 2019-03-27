@@ -1,1 +1,0 @@
-name = "webplatform_cli"
