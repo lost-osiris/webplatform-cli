@@ -1,10 +1,10 @@
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from datetime import datetime, timedelta
-import binascii, os, simplejson, hashlib
+import binascii, os, json, hashlib
 
-from lib.utils.config import Settings
-from lib.utils.sessions import Session
+from .config import Settings
+from .sessions import Session
 
 class Manager(object):
    __instance = None

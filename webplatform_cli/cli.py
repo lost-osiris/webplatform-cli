@@ -1,4 +1,4 @@
-from handler import ContainerHandler
+from .handler import ContainerHandler
 import os, docker
 
 class Docker(object):

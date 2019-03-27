@@ -1,6 +1,6 @@
 from bson.objectid import ObjectId
-from lib.utils.config import Settings
-from lib.utils.db import Manager
+from .config import Settings
+from .db import Manager
 # from lib.permissions.apis import list as apiList
 import os, inspect, imp, datetime, copy, sys
 

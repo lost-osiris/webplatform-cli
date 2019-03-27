@@ -1,11 +1,11 @@
-from lib.config import Settings
+from webplatform_cli.lib.config import Settings
 from docker import APIClient
 import os
 
-settings = Settings()
-client = APIClient(base_url="unix://var/run/docker.sock")
-
 def build_base(service, path, force):
+   settings = Settings()
+   client = APIClient(base_url="unix://var/run/docker.sock")
+
    name = "webplatform-base-%s" % service
    image_name = 'webplatform-base-%s:latest' % (service)
 

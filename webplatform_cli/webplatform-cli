@@ -36,25 +36,17 @@ cmd = {
    'reset':{'type':'service','headless':True},
 }
 
-controller_path = os.path.dirname(os.path.realpath(__file__))
-base_path = os.path.abspath(os.path.join(controller_path, '..'))
-
-if base_path not in sys.path:
-   sys.path.append(base_path)
-
-if controller_path not in sys.path:
-   sys.path.append(controller_path)
-
-from dependencies.docopt import docopt
-from cli import Docker
-from lib.config import Settings
+from webplatform_cli.dependencies.docopt import docopt
+from webplatform_cli.cli import Docker
+from webplatform_cli.lib.config import Settings
+from webplatform_cli import base_path
 
 import json
 
 if __name__ == "__main__":
    import docker
    args = docopt(__doc__,
-               version='Web Platform CLI Version 1.0',
+               version='Web Platform CLI Version 1.0.3',
                options_first=True)
 
    if not args['<command>'] in list(cmd.keys()):

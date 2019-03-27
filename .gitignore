@@ -8,5 +8,5 @@ __pycache__/
 .DS_Store
 dist/
 !**/README
-webplatform_cli.egg-info/
+*.egg-info/
 build/
