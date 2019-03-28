@@ -1,4 +1,3 @@
-#!/usr/bin/python3 -B
 from setuptools import setup, find_packages
 
 setup(name = "webplatform-cli",
