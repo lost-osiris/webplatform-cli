@@ -26,6 +26,8 @@ def create(client, network):
          "mode": "rw",
       },
    }
+
+   print(devel_volumes)
    volumes = main.add_volumes(devel_volumes)
    ports = {
       str(settings['port']): settings['port']

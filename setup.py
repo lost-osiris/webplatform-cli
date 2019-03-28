@@ -1,22 +1,19 @@
-# from distutils.core import setup
+#!/usr/bin/python3 -B
 from setuptools import setup, find_packages
 
 setup(name = "webplatform-cli",
-   version = "1.0.21",
+   version = "1.1.0",
    description = "CLI used for a webplatform",
    author = "Matthew Owens",
    author_email = "mowens@redhat.com",
    url = "https://github.com/lost-osiris/webplatform-cli",
-   # packages = ['lib', 'controller'],
-   packages = find_packages(exclude=("db", "settings")),
-   # data_files = (
-   #    ('db', ['db']),
-   #    ('settings', ['settings'])
-   # ),
+   packages = find_packages(),
+   include_package_data = True,
    install_requires = [
       'docker',
       'pymongo'
    ],
+   python_requires='>=3',
    license='MIT',
    scripts = ["webplatform_cli/webplatform-cli"],
    long_description = """TODO""",

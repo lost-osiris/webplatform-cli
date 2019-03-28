@@ -16,12 +16,12 @@ RUN mkdir /home/container/daemon/
 VOLUME "/data/db/"
 VOLUME "/home/container/config/"
 
+RUN groupadd -r mongodb && useradd -r -d /home/mongodb/ -g  mongodb mongodb
+RUN usermod mongodb -a -G wheel
+
 RUN chown -R mongodb:mongodb /data
 RUN mkdir -p /data/db /data/configdb
 RUN chown -R mongodb:mongodb /data/db /data/configdb
-
-RUN groupadd -r mongodb && useradd -r -d /home/mongodb/ -g  mongodb mongodb
-RUN usermod mongodb -a -G wheel
 
 ADD entry.sh /home/
 CMD /home/entry.sh

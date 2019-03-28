@@ -185,6 +185,7 @@ class ContainerHandler:
          network = self.create_network()
 
       settings = self.settings.get_config(service)
+
       if node:
          settings = settings[node]
 

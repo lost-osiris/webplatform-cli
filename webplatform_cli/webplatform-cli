@@ -1,7 +1,4 @@
-#!/usr/bin/python3 -B
-   # service-ctl [ --force --debug] <instance> <command> [<args>...]
-   # service-ctl [ --force --debug] <command> [<args>...]
-   # service-ctl [ --force --debug] <command> [<args>...]
+#!/Library/Frameworks/Python.framework/Versions/3.6/bin/python3 -B
 """usage:
    webplatform-cli [ --force --debug ] <command> [<args>...]
    webplatform-cli (--version | --help)
@@ -36,15 +33,20 @@ cmd = {
    'reset':{'type':'service','headless':True},
 }
 
-from webplatform_cli.dependencies.docopt import docopt
-from webplatform_cli.cli import Docker
-from webplatform_cli.lib.config import Settings
-from webplatform_cli import base_path
-
-import json
-
 if __name__ == "__main__":
-   import docker
+   try:
+      from webplatform_cli import base_path
+   except:
+      controller_path = os.path.dirname(os.path.realpath(__file__))
+      base_path = os.path.abspath(os.path.join(controller_path))
+   finally:
+      if base_path not in sys.path:
+         sys.path.append(base_path)
+
+   from dependencies.docopt import docopt
+   from cli import Docker
+   from lib.config import Settings
+
    args = docopt(__doc__,
                version='Web Platform CLI Version 1.0.3',
                options_first=True)

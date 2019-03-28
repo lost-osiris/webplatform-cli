@@ -1,4 +1,3 @@
-db/data/**
 *.pyc
 *.lock
 !/.gitignore
@@ -10,3 +9,4 @@ dist/
 !**/README
 *.egg-info/
 build/
+webplatform_cli/db/data/**
