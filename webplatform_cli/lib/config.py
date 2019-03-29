@@ -31,6 +31,11 @@ class Settings(object):
          Settings.__object = object.__new__(cls)
          Settings.__object.__set_class(*args, **kwargs)
 
+      elif kwargs['path'] is not None:
+         Settings.__object = object.__new__(cls)
+         Settings.__object.__set_class(*args, **kwargs)
+
+
       return Settings.__object
 
    def __init__(self, path=None, verify=None):
@@ -74,6 +79,7 @@ class Settings(object):
                return [i for i in self.__config[service].keys() if i != "multiple"]
          else:
             return service
+
       return self.__services
 
    def get_actions(self, service):
@@ -114,7 +120,7 @@ class Settings(object):
    def __find_configs(self):
       path = "%s/settings/" % self.__base_path
 
-      services = [i.replace(".json", "") for i in os.listdir(path) if "settings" not in i and "common" not in i and "cli" not in i]
+      services = [i.replace(".json", "") for i in os.listdir(path) if "settings" not in i and "common" not in i]
 
       configs = {}
       for i in services:

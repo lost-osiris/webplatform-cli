@@ -6,7 +6,7 @@
 __pycache__/
 .DS_Store
 dist/
-!**/README
 *.egg-info/
 build/
 webplatform_cli/db/data/**
+!**/README

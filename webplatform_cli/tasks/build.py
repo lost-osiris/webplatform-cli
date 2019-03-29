@@ -1,4 +1,3 @@
-from lib.config import Settings
 from docker import APIClient
 import os
 

@@ -1,7 +1,7 @@
 {
   "num_cores": 1,
   "port": 27017,
-  "host": "mongodb",
+  "host": "localhost",
   "container": {
     "rel": true,
     "path": "db/docker/create.py"

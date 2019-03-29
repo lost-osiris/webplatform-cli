@@ -1,12 +1,12 @@
 from setuptools import setup, find_packages
 
 setup(name = "webplatform-cli",
-   version = "1.1.0",
+   version = "1.1.1",
    description = "CLI used for a webplatform",
    author = "Matthew Owens",
    author_email = "mowens@redhat.com",
    url = "https://github.com/lost-osiris/webplatform-cli",
-   packages = find_packages(),
+   packages = find_packages(exclude=('db')),
    include_package_data = True,
    install_requires = [
       'docker',

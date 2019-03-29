@@ -1,10 +1,16 @@
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from datetime import datetime, timedelta
-import binascii, os, json, hashlib
+from pytz import timezone
+
+import pytz
+import binascii
+import os
+import json
+import hashlib
+
 
 from .config import Settings
-from .sessions import Session
 
 class Manager(object):
    __instance = None
@@ -15,7 +21,6 @@ class Manager(object):
    settings = None
    db_host = None
    db_port = None
-   sessions = None
 
    __db = None
 
@@ -26,28 +31,29 @@ class Manager(object):
 
       return Manager.__instance
 
-   def __init__(self, db=None, new_client=False):
+   def __init__(self, db=None, new_client=False, user=None):
       self.setup(db)
 
+      if user:
+         self.user = user
 
    def __set_class(self):
-      Manager.settings = Settings()
+      controller_path = os.path.dirname(os.path.realpath(__file__))
+      path = os.path.abspath(os.path.join(controller_path, ".."))
+
+      Manager.settings = Settings(path=path, verify=False)
       Manager.config = Manager.settings.get_config("mongodb")
 
       Manager.db_host = Manager.settings.get_config("mongodb")['host']
       Manager.db_port = Manager.settings.get_config("mongodb")['port']
 
       Manager.mongo_client = MongoClient(Manager.db_host, Manager.db_port, connect=False)
-      Manager.ldap_server = Manager.ldap_server
-
-      Manager.sessions = Session(Manager.mongo_client["cee-tools"])
 
    def setup(self, db):
       self.mongo_client = Manager.mongo_client
       self.host = Manager.host
       self.config = Manager.config
       self.settings = Manager.settings
-      self.sessions = Manager.sessions
 
       if db != None:
          self.__db = Manager.mongo_client[db]
@@ -81,32 +87,11 @@ class Manager(object):
    def get_http_port(self):
       return self.http_port
 
-   def set_user_uid(self, uid):
-      self.user_uid = uid
-
    def get_user_uid(self):
-      return self.user_uid
+      return self.user.get_id()
 
-   def set_permissions(self, permissions):
-      self.permissions = permissions
-
-   def get_permissions(self, app=None):
-      if app == None:
-         return self.permissions
-      else:
-         if app in self.permissions:
-            return self.permissions[app]
-         else:
-            return []
-
-   def get_session(self, **kwargs):
-      return self.sessions.get_session(**kwargs)
-
-   def get_all_sessions(self, uid):
-      return self.sessions.get_session(uid=uid)
-
-   def validate_session(self, *args):
-      return self.sessions.validate(*args)
+   def get_user(self):
+      return self.user.get()
 
    def parse_cursor_object(self, cursor):
       if cursor == None or cursor == "":
@@ -118,6 +103,26 @@ class Manager(object):
          cursor['id'] = _id
 
       return cursor
+
+   def get_application(self, module=None, app=None):
+      applications = self.settings.get_config("cli")['applications']
+
+      if app is not None:
+         for a in applications:
+            if a['name'] == app:
+               return a['title']
+
+         return None
+      else:
+         if module == None:
+            return applications
+
+         for app in applications:
+            if app['module_base'] == module.split(".")[0]:
+               return app['name']
+
+         return "system"
+
 
    @staticmethod
    def get_current_time():
@@ -133,22 +138,19 @@ class Manager(object):
 
    @staticmethod
    def local_to_utc(date, local_tz):
-      from datetime import datetime
-      from pytz import timezone
-      import pytz
       tz = timezone(local_tz)
       aware = tz.localize(date)
+
       return pytz.utc.normalize(aware)
 
    @staticmethod
    def local_timestamp_to_datetime(ts):
-      from datetime import datetime
       date = datetime.fromtimestamp(ts)
 
       return Manager.local_to_utc(date, 'US/Eastern')
 
    def utc_to_local(date, tz):
-      import pytz
       local_tz = pytz.timezone(tz)
       local_date = date.replace(tzinfo=pytz.utc).astimezone(local_tz)
+
       return local_tz.normalize(local_date)
