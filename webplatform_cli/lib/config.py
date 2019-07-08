@@ -27,6 +27,7 @@ class Settings(object):
    __config_paths = None
 
    def __new__(cls, *args, **kwargs):
+      print(args, kwargs)
       if Settings.__object is None:
          Settings.__object = object.__new__(cls)
          Settings.__object.__set_class(*args, **kwargs)
@@ -41,7 +42,7 @@ class Settings(object):
    def __init__(self, path=None, verify=None):
       self.setup()
 
-   def __set_class(self, path, verify):
+   def __set_class(self, path=None, verify=None):
       if path is None:
          path = Settings.__base_path
       else:

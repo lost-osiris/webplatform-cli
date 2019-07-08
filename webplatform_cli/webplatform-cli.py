@@ -42,9 +42,12 @@ if __name__ == "__main__":
       if base_path not in sys.path:
          sys.path.append(base_path)
 
+   from lib.config import Settings
+
+   settings = Settings(path=base_path)
+
    from dependencies.docopt import docopt
    from cli import Docker
-   from lib.config import Settings
 
    args = docopt(__doc__,
                version='Web Platform CLI Version 1.0.3',
@@ -53,10 +56,6 @@ if __name__ == "__main__":
    if not args['<command>'] in list(cmd.keys()):
       sys.stderr.write(__doc__)
       sys.exit(1)
-
-   verify = not cmd[args['<command>']]['headless']
-
-   settings = Settings(base_path, verify=verify)
 
    import commands_parser as parser
    subargs = getattr(parser, 'docopt_%s' % (cmd[args['<command>']]['type'],))(args['<command>'], args['<args>'])
