@@ -1,4 +1,4 @@
-from lib.config import Settings
+from webplatform_cli.lib.config import Settings
 import socket
 
 settings = Settings()

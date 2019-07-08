@@ -14,7 +14,7 @@ setup(name = "webplatform-cli",
    ],
    python_requires='>=3',
    license='MIT',
-   scripts = ["webplatform_cli/webplatform-cli"],
+   scripts = ["webplatform_cli/webplatform-cli.py"],
    long_description = """TODO""",
    classifiers = [
        "Programming Language :: Python :: 3",

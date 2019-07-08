@@ -41,8 +41,11 @@ class Docker(object):
          container.run_service(service, action)
 
    def setup(self, params):
-      from tasks import build
+      from webplatform_cli.tasks import build
       force = self.options['force']
 
       docker_file = "%s/db/docker/" % self.base_path
       build.run("mongodb", docker_file, force=force, base=False)
+
+   def tail(self, service, follow=False):
+      pass

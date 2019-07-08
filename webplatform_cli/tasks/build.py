@@ -4,7 +4,7 @@ import os
 client = APIClient(base_url="unix://var/run/docker.sock")
 
 def build_base(service, path, force):
-   name = "webplatform-base-%s" % service
+   # name = "webplatform-base-%s" % service
    image_name = 'webplatform-base-%s:latest' % (service)
 
    print("Building base image for (%s)." % service)

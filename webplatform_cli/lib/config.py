@@ -31,7 +31,7 @@ class Settings(object):
          Settings.__object = object.__new__(cls)
          Settings.__object.__set_class(*args, **kwargs)
 
-      elif kwargs['path'] is not None:
+      elif "path" in kwargs and kwargs['path'] is not None:
          Settings.__object = object.__new__(cls)
          Settings.__object.__set_class(*args, **kwargs)
 
@@ -264,6 +264,7 @@ class Settings(object):
          return output
 
       else:
+ 
          for config_type in list(self.__config.keys()):
             tmp = {}
 

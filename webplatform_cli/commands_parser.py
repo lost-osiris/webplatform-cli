@@ -3,7 +3,11 @@ from lib.config import Settings
 import sys
 
 settings = Settings()
+config = settings.get_config("cli")
+# print(config)
+# print(settings.get_service())
 services = settings.get_config("cli")['services']
+
 
 def docopt_service(command, argv):
    argv.insert(0, command)

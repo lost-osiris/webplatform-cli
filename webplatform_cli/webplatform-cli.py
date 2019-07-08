@@ -1,4 +1,3 @@
-#!/Library/Frameworks/Python.framework/Versions/3.6/bin/python3 -B
 """usage:
    webplatform-cli [ --force --debug ] <command> [<args>...]
    webplatform-cli (--version | --help)

@@ -52,7 +52,7 @@ class ContainerHandler:
          service_name = "%s_%s" % (service, node)
 
       running = False
-      error = False
+      # error = False
       has_script = False
 
       if container and "exited" in container.status and action == "stop":
@@ -173,12 +173,11 @@ class ContainerHandler:
       return network
 
    def create_container(self, service, node=False):
-      base_path = self.settings.get_path()
+      # base_path = self.settings.get_path()
 
       service = service.replace("-", "_")
-      service_name = service
       if node:
-         service_name = "%s_%s" % (service, node)
+         service = "%s_%s" % (service, node)
 
       network = self.check_network()
       if network == None:
