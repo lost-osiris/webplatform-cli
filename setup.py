@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name = "webplatform-cli",
-   version = "1.1.3",
+   version = "1.1.4",
    description = "CLI used for a webplatform",
    author = "Matthew Owens",
    author_email = "mowens@redhat.com",
@@ -14,7 +14,10 @@ setup(name = "webplatform-cli",
    ],
    python_requires='>=3',
    license='MIT',
-   scripts = ["webplatform_cli/webplatform-cli"],
+   entry_points={
+       "console_scripts": ["webplatform-cli=webplatform_cli.webplatform_cli:main"]
+   },
+   #scripts = ["webplatform_cli/webplatform-cli"],
    long_description = """TODO""",
    classifiers = [
        "Programming Language :: Python :: 3",

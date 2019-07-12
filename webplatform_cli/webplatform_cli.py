@@ -32,7 +32,7 @@ cmd = {
    'reset':{'type':'service','headless':True},
 }
 
-if __name__ == "__main__":
+def main():
    try:
       from webplatform_cli import base_path
    except:
@@ -76,3 +76,6 @@ if __name__ == "__main__":
 
    controller = Docker(settings, debug=args['--debug'], force=args['--force'])
    controller.parse_args(**ctrl)
+
+if __name__ == "__main__":
+   main()
