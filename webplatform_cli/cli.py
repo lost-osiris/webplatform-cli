@@ -44,8 +44,8 @@ class Docker(object):
       from webplatform_cli.tasks import build
       force = self.options['force']
 
-      docker_file = "%s/db/docker/" % self.base_path
-      build.run("mongodb", docker_file, force=force, base=False)
+      docker_file = "%s/docker/base/Dockerfile" % self.base_path
+      build.run("mongodb", docker_file, force=force)
 
    def tail(self, service, follow=False):
       pass

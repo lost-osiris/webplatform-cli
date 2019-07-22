@@ -3,7 +3,18 @@
   "port": 27017,
   "host": "localhost",
   "container": {
-    "rel": true,
-    "path": "db/docker/create.py"
+    "num_cores": 1,
+    "name": "mongodb",
+    "volumes": {
+      "config": {
+        "rel": true,
+        "path": "data/mongodb/"
+      },
+      "data": ""
+    },
+    "ports": [
+      [27017, 27217]
+    ],
+    "mem_limit": "8g"
   }
 }
