@@ -29,7 +29,7 @@ def container(client, network, service):
    if "volumes" in settings['container']:
       for key, path in settings['container']['volumes'].items():
          volumes[path] = {
-            "bind": "/home/container/" % key,
+            "bind": "/home/container/%s" % key,
             "mode": "rw"
          }
 
