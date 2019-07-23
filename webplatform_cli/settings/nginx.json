@@ -1,3 +1,11 @@
 {
-  
+  "num_cores": 1,
+  "host": "localhost",
+  "container": {
+    "name": "nginx",
+    "ports": {
+      "8000": 8000
+    },
+    "mem_limit": "4g"
+  }
 }

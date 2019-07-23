@@ -7,4 +7,3 @@
 #    set -- $numa "$@"
 # fi
 mongod --config /home/container/config/conf.yaml
-bash

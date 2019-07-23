@@ -42,12 +42,12 @@ def main():
       if base_path not in sys.path:
          sys.path.append(base_path)
 
-   from lib.config import Settings
+   from webplatform_cli.lib.config import Settings
 
    settings = Settings(path=base_path)
 
-   from dependencies.docopt import docopt
    from cli import Docker
+   from docopt import docopt
 
    args = docopt(__doc__,
                version='Web Platform CLI Version 1.0.3',

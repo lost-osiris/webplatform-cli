@@ -1,4 +1,3 @@
-from handler import ContainerHandler
 import os, docker
 
 class Docker(object):
@@ -34,6 +33,8 @@ class Docker(object):
          self.tail(kwargs['params']['service'], follow=kwargs['params']['follow'])
 
    def run_container(self, service=None, action=None):
+      from webplatform_cli.handler import ContainerHandler
+      
       container = ContainerHandler(self.settings, self.client, self.options)
       if service == None:
          container.run(action)
@@ -44,7 +45,7 @@ class Docker(object):
       from webplatform_cli.tasks import build
       force = self.options['force']
 
-      docker_file = "%s/docker/base/Dockerfile" % self.base_path
+      docker_file = "%s/docker/base/" % self.base_path
       build.run("mongodb", docker_file, force=force)
 
    def tail(self, service, follow=False):

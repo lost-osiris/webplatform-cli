@@ -23,11 +23,10 @@ class Settings(object):
    __base_path = None
    __object = None
    __services = None
-   __config = None
-   __config_paths = None
+   __config = {}
+   __config_paths = {}
 
    def __new__(cls, *args, **kwargs):
-      print(args, kwargs)
       if Settings.__object is None:
          Settings.__object = object.__new__(cls)
          Settings.__object.__set_class(*args, **kwargs)
@@ -35,7 +34,6 @@ class Settings(object):
       elif "path" in kwargs and kwargs['path'] is not None:
          Settings.__object = object.__new__(cls)
          Settings.__object.__set_class(*args, **kwargs)
-
 
       return Settings.__object
 
@@ -146,23 +144,15 @@ class Settings(object):
    def __load(self):
       for i in list(self.__config_paths.keys()):
          path = self.__config_paths[i]
+         
          if isinstance(path, dict):
             self.__config[i] = {}
+            
             for j in list(path.keys()):
-               if j != "multiple":
-                  self.__config[i][j] = self.__load_config(path[j])
-               else:
-                  self.__config[i][j] = True
+               self.__config[i][j] = self.__load_config(path[j])
 
          if isinstance(path, str):
             self.__config[i] = self.__load_config(path)
-
-      # path = "%s/settings/" % self.__base_path
-      # for i in os.listdir(path):
-      #    if "_" not in i and i[0] != ".":
-      #       config = i.split(".json")[0]
-      #       if config not in self.__config.keys():
-      #          self.__config[config] = self.__load_config(path + i)
 
    def __load_config(self, path):
       try:
@@ -232,35 +222,12 @@ class Settings(object):
       output = {}
 
       if config_type is not None and config_type in list(self.__config.keys()):
-         if "multiple" in self.__config[config_type]:
+         for key, value in list(self.__config[config_type].items()):
+            output[key] = value
 
-            for config_key, config in self.__config[config_type].items():
-               if config_key != "multiple":
-
-                  output[config_key] = {}
-                  for key, value in list(config.items()):
-                     output[config_key][key] = value
-
-                     # if (isinstance(value, str) and value[0] == "/") or (isinstance(value, dict) and config_type != "mongodb"):
-                     if (isinstance(value, str) and value[0] == "/") or (isinstance(value, dict)):
-                        output_key, output_value = self.__process_config(key, value, config_type)
-                        output[config_key][output_key] = output_value
-
-                     # if config_type == "mongodb":
-                     #    config = self.__process_mongodb_config(value)
-                     #    output[config_key][key] = config
-         else:
-            for key, value in list(self.__config[config_type].items()):
-               output[key] = value
-
-               # if (isinstance(value, str) and value[0] == "/") or (isinstance(value, dict) and config_type != "mongodb"):
-               if (isinstance(value, str) and value[0] == "/") or (isinstance(value, dict)):
-                  output_key, output_value = self.__process_config(key, value, config_type)
-                  output[output_key] = output_value
-
-               # if config_type == "mongodb":
-               #    config = self.__process_mongodb_config(value)
-               #    output[key] = config
+            if (isinstance(value, str) and value[0] == "/") or (isinstance(value, dict)):
+               output_key, output_value = self.__process_config(key, value, config_type)
+               output[output_key] = output_value
 
          return output
 
@@ -269,51 +236,15 @@ class Settings(object):
          for config_type in list(self.__config.keys()):
             tmp = {}
 
-            if "multiple" in self.__config[config_type]:
-               for config_key, config in self.__config[config_type].items():
-                  if config_key != "multiple":
-                     tmp[config_key] = {}
-                     for key, value in list(config.items()):
-                        tmp[config_key][key] = value
-#
-                        # if (isinstance(value, str) and value[0] == "/") or (isinstance(value, dict) and config_type != "mongodb"):
-                        if (isinstance(value, str) and value[0] == "/") or (isinstance(value, dict)):
-                           output_key, output_value = self.__process_config(key, value, config_type)
-                           tmp[config_key][output_key] = output_value
+            for key, value in list(self.__config[config_type].items()):
+               tmp[key] = value
 
-                        # if config_type == "mongodb":
-                        #    config = self.__process_mongodb_config(value)
-                        #    tmp[config_key][key] = config
-
-            else:
-               for key, value in list(self.__config[config_type].items()):
-                  tmp[key] = value
-
-                  # if (isinstance(value, str) and value[0] == "/") or (isinstance(value, dict) and config_type != "mongodb"):
-                  if (isinstance(value, str) and value[0] == "/") or (isinstance(value, dict)):
-                     output_key, output_value = self.__process_config(key, value, config_type)
-                     tmp[output_key] = output_value
-
-                  # if config_type == "mongodb":
-                  #    config = self.__process_mongodb_config(value)
-                  #    tmp[key] = config
+               if (isinstance(value, str) and value[0] == "/") or (isinstance(value, dict)):
+                  output_key, output_value = self.__process_config(key, value, config_type)
+                  tmp[output_key] = output_value
 
             output[config_type] = tmp
 
-            # else:
-            #    for key, value in list(self.__config[config_type].items()):
-            #       tmp[key] = value
-            #
-            #       if (isinstance(value, str) and value[0] == "/") or (isinstance(value, dict) and config_type != "mongodb"):
-            #          output_key, output_value = self.__process_config(key, value, config_type)
-            #          tmp[output_key] = output_value
-            #
-            #       if config_type == "mongodb":
-            #          config = self.__process_mongodb_config(value)
-            #          tmp[key] = config
-            #
-            #       output[config_type] = tmp
-            #
          return output
 
       return self.__config
@@ -342,15 +273,6 @@ class Settings(object):
       return output
 
    def __process_config(self, key, value, config_type):
-      if isinstance(value, str):
-         value = {
-            "abs": True,
-            "path": value
-         }
-
-      if "environ" in value:
-         key = value['environ'].upper()
-
       if isinstance(value, list):
          parsed_path = []
 
@@ -369,7 +291,7 @@ class Settings(object):
 
          output_value = " ".join(parsed_path)
 
-      elif "rel" in value or "abs" in value:
+      elif isinstance(value, dict) and ("rel" in value or "abs" in value):
          output_value = value['path']
 
          path = None
@@ -396,6 +318,13 @@ class Settings(object):
          output_value = path
 
          value = output_value
+      
+      elif isinstance(value, dict):
+         new_value = {}
+         for k, v in value.items():
+            new_key, new_value[new_key] = self.__process_config(k, v, config_type)
+
+         return key, new_value
 
       return key, value
 

@@ -1,6 +1,8 @@
 FROM docker.io/fedora:24
 LABEL maintainer="Matthew Owens mowens@redhat.com"
 
+WORKDIR /home/container
+
 ADD mongodb-org-3.2.repo /etc/yum.repos.d/
 
 RUN dnf groupinstall -y "Development Tools"
@@ -34,18 +36,12 @@ RUN setcap cap_net_raw,cap_net_admin+p /usr/bin/ping
 
 # Flask Setup
 RUN pip3.5 install --upgrade pip
-
 ADD requirements.txt /home/container/
-RUN pip3.5 install -r requirements.txt
+RUN pip3.5 install -r /home/container/requirements.txt
 
 # Mongodb Setup
-# RUN groupadd -r mongodb && useradd -r -d /home/mongodb/ -g  mongodb mongodb
-# RUN chown -R mongodb:mongodb /data
-# RUN mkdir -p /data/db /data/configdb
-# RUN chown -R mongodb:mongodb /data/db /data/configdb
-# RUN usermod mongodb -a -G wheel
-
-WORKDIR /home/container
+RUN groupadd -r mongodb && useradd -r -d /home/mongodb/ -g  mongodb mongodb
+RUN usermod mongodb -a -G wheel
 
 VOLUME "/home/container/config/"
 VOLUME "/home/container/actions/"

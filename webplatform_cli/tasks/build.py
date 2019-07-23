@@ -3,21 +3,16 @@ import os
 
 client = APIClient(base_url="unix://var/run/docker.sock")
 
-def run(service, path, context=None, force=False):
+def run(service, path, force=False):
    image_name = 'webplatform-base:latest'
 
-   # dockerfile = path + 'Dockerfile'
-   if not context:
-      context = path
-
-   print(path, context)
    print("Building base image.")
    kwargs = {
       'nocache': force,
       'decode': True,
       'forcerm': True,
-      'path': context,
-      'dockerfile': open(path),
+      'path': path,
+      'dockerfile': path + "/Dockerfile",
       'rm': True,
       'tag': image_name,
       # 'container_limits': {

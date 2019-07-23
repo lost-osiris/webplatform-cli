@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name = "webplatform-cli",
-   version = "1.1.4",
+   version = "1.1.5",
    description = "CLI used for a webplatform",
    author = "Matthew Owens",
    author_email = "mowens@redhat.com",
@@ -10,7 +10,8 @@ setup(name = "webplatform-cli",
    include_package_data = True,
    install_requires = [
       'docker',
-      'pymongo'
+      'pymongo',
+      'docopt'
    ],
    python_requires='>=3',
    license='MIT',

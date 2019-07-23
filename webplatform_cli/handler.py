@@ -3,6 +3,7 @@ try:
 except:
    import json as simplejson
 
+from .tasks import create
 import collections, imp, time, sys
 
 class ContainerHandler:
@@ -188,8 +189,7 @@ class ContainerHandler:
       if node:
          settings = settings[node]
 
-      container = imp.load_source(service, settings['container'])
-      return container.create(self.client, network)
+      return create.container(self.client, network, service)
 
    def check_running(self, service):
       services = self.settings.get_service(service=service)

@@ -1,11 +1,9 @@
-from dependencies.docopt import docopt
-from lib.config import Settings
+from webplatform_cli.lib.config import Settings
+from docopt import docopt
 import sys
 
 settings = Settings()
 config = settings.get_config("cli")
-# print(config)
-# print(settings.get_service())
 services = settings.get_config("cli")['services']
 
 

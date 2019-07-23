@@ -1,4 +1,4 @@
-from webplatform_cli.lib.config import Settings
+from ..lib.config import Settings
 import socket
 
 settings = Settings()
@@ -6,10 +6,6 @@ base_path = settings.get_path()
 
 volumes = {
    # "%s/application" % base_path: {
-   #    "bind": "/home/cee-tools/setup",
-   #    "mode": "rw",
-   # },
-   # "%s/setup/instances/" % base_path: {
    #    "bind": "/home/cee-tools/setup",
    #    "mode": "rw",
    # },
