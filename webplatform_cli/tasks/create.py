@@ -26,6 +26,13 @@ def container(client, network, service):
       },
    }
 
+   if "volumes" in settings['container']:
+      for key, path in settings['container']['volumes'].items():
+         volumes[path] = {
+            "bind": "/home/container/" % key,
+            "mode": "rw"
+         }
+
    volumes = main.add_volumes(volumes)
 
    kwargs = {

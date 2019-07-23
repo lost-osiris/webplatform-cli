@@ -46,3 +46,4 @@ RUN usermod mongodb -a -G wheel
 VOLUME "/home/container/config/"
 VOLUME "/home/container/actions/"
 VOLUME "/home/container/data/"
+VOLUME "/home/container/service/"
