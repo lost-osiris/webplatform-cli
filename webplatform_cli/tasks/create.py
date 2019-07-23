@@ -34,7 +34,7 @@ def container(client, network, service):
          }
 
    volumes = main.add_volumes(volumes)
-
+   print(volumes)
    kwargs = {
       **settings['container'],
       "image": "webplatform-base:latest",

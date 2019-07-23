@@ -35,9 +35,10 @@ RUN dnf install -y \
 RUN setcap cap_net_raw,cap_net_admin+p /usr/bin/ping
 
 # Flask Setup
-RUN pip3.5 install --upgrade pip
+RUN pip3 install --upgrade pip
 ADD requirements.txt /home/container/
-RUN pip3.5 install -r /home/container/requirements.txt
+RUN pip3 install -r /home/container/requirements.txt
+RUN pip3 install webplatform-cli
 
 # Mongodb Setup
 RUN groupadd -r mongodb && useradd -r -d /home/mongodb/ -g  mongodb mongodb

@@ -1,4 +1,5 @@
 """usage:
+   webplatform-cli [ --force --debug ] <command> [<args>...]
    webplatform-cli [ --force --debug --base-path <base-path> ] <command> [<args>...]
    webplatform-cli (--version | --help)
 
