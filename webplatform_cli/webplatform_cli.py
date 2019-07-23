@@ -1,10 +1,12 @@
 """usage:
-   webplatform-cli [ --force --debug ] <command> [<args>...]
+   webplatform-cli [ --force --debug --base-path <base-path> ] <command> [<args>...]
    webplatform-cli (--version | --help)
 
 options:
    -h --help                            Print this help message
    --version                            Show version
+   -p --base-path                       Specify a base path for all container 
+                                        setup to run off of
    -f --force                           Force the action being preformed
    -d --debug                           Enable controller debugging mode,
                                         for controller development only
@@ -43,10 +45,6 @@ def main():
          sys.path.append(base_path)
 
    from webplatform_cli.lib.config import Settings
-
-   settings = Settings(path=base_path)
-
-   from cli import Docker
    from docopt import docopt
 
    args = docopt(__doc__,
@@ -56,6 +54,13 @@ def main():
    if not args['<command>'] in list(cmd.keys()):
       sys.stderr.write(__doc__)
       sys.exit(1)
+
+   if args['<base-path>']:
+      base_path = os.path.abspath(os.path.join(args['<base-path>']))
+
+   settings = Settings(path=base_path)
+
+   from cli import Docker
 
    import commands_parser as parser
    subargs = getattr(parser, 'docopt_%s' % (cmd[args['<command>']]['type'],))(args['<command>'], args['<args>'])
