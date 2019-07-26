@@ -1,7 +1,7 @@
 FROM docker.io/fedora:24
 LABEL maintainer="Matthew Owens mowens@redhat.com"
 
-WORKDIR /home/container
+WORKDIR /home/root
 
 ADD mongodb-org-3.2.repo /etc/yum.repos.d/
 
@@ -43,6 +43,10 @@ RUN pip3 install -r /home/container/requirements.txt
 RUN groupadd -r mongodb && useradd -r -d /home/mongodb/ -g  mongodb mongodb
 RUN usermod mongodb -a -G wheel
 
+# Platform Setup
+ADD platform-requirements.txt /home/container/
+RUN pip3 install -r /home/container/platform-requirements.txt
+
 # ADD entry.sh /home/container/
 
 VOLUME "/home/container/config/"
@@ -51,4 +55,8 @@ VOLUME "/home/container/data/"
 VOLUME "/home/container/service/"
 VOLUME "/home/container/webplatform_cli/"
 
-RUN export PYTHONPATH="${PYTHONPATH}:/home/container/webplatform_cli"
+WORKDIR /home/container
+
+
+# RUN export PYTHONPATH="${PYTHONPATH}:/home/container/webplatform_cli"
+# RUN export PATH="${PATH}:/home/container/webplatform_cli"

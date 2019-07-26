@@ -3,7 +3,7 @@ try:
 except:
    import json as simplejson
 
-from .tasks import create
+from tasks import create
 import collections, imp, time, sys
 
 class ContainerHandler:

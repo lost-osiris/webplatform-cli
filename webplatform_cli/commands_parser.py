@@ -1,4 +1,4 @@
-from webplatform_cli.lib.config import Settings
+from lib.config import Settings
 from docopt import docopt
 import sys
 

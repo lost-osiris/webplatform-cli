@@ -1,4 +1,4 @@
-from ..containers import main
+from containers import main
 import os, webplatform_cli
 
 

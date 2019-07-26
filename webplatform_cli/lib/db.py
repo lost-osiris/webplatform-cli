@@ -9,10 +9,10 @@ import os
 import json
 import hashlib
 
-
-from .config import Settings
+from webplatform_cli.lib.config import Settings
 
 class Manager(object):
+   
    __instance = None
 
    mongo_client = None
@@ -27,7 +27,7 @@ class Manager(object):
    def __new__(cls, *args, **kwargs):
       if Manager.__instance is None:
          Manager.__instance = object.__new__(cls)
-         Manager.__instance.__set_class()
+         Manager.__instance.__set_class(*args, **kwargs)
 
       return Manager.__instance
 
@@ -37,8 +37,11 @@ class Manager(object):
       if user:
          self.user = user
 
-   def __set_class(self):
-      Manager.settings = Settings(path="/home/container/webplatform_cli", verify=False)
+   def __set_class(self, port=None, host=None):
+      controller_path = os.path.dirname(os.path.realpath(__file__))
+      base_path = os.path.abspath(os.path.join(controller_path, '../'))
+      
+      Manager.settings = Settings(path=base_path, verify=False)
       Manager.config = Manager.settings.get_config("mongodb")
 
       if Manager.config:
@@ -135,7 +138,6 @@ class Manager(object):
                return app['name']
 
          return "system"
-
 
    @staticmethod
    def get_current_time():
