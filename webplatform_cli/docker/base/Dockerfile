@@ -38,13 +38,17 @@ RUN setcap cap_net_raw,cap_net_admin+p /usr/bin/ping
 RUN pip3 install --upgrade pip
 ADD requirements.txt /home/container/
 RUN pip3 install -r /home/container/requirements.txt
-RUN pip3 install webplatform-cli
 
 # Mongodb Setup
 RUN groupadd -r mongodb && useradd -r -d /home/mongodb/ -g  mongodb mongodb
 RUN usermod mongodb -a -G wheel
 
+# ADD entry.sh /home/container/
+
 VOLUME "/home/container/config/"
 VOLUME "/home/container/actions/"
 VOLUME "/home/container/data/"
 VOLUME "/home/container/service/"
+VOLUME "/home/container/webplatform_cli/"
+
+RUN export PYTHONPATH="${PYTHONPATH}:/home/container/webplatform_cli"

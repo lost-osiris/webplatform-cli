@@ -97,12 +97,11 @@ class Settings(object):
          }
       }
 
-      # Currently no implementation under new cli
-      path = "%s/setup/instances/common/%s/actions" % (self.__base_path, service)
+      path = "%s/docker/actions/%s" % (self.__base_path, service)
 
       try:
          for i in os.listdir(path):
-            regex = re.compile("(.+)?\.+")
+            regex = re.compile(r'(.+)?\.+')
             match = regex.search(i)
 
             if match != None and len(match.groups()) > 0:
@@ -115,6 +114,9 @@ class Settings(object):
 
       except OSError:
          return actions
+
+   def list_applications(self):
+      return self.__config['cli']['applications']
 
    def __find_configs(self):
       path = "%s/settings/" % self.__base_path
@@ -248,29 +250,6 @@ class Settings(object):
          return output
 
       return self.__config
-
-   def __process_mongodb_config(self, config):
-      output = {}
-      if type(config) is dict:
-         for section_key, section_value in list(config.items()):
-            output[section_key] = section_value
-
-            if isinstance(section_value, str) and section_value[0:1] != "/" and "/" in section_value:
-               output[section_key] = os.path.join(self.__base_path, section_value)
-
-            if isinstance(section_value, dict):
-               tmp = {}
-               for value_key, value in list(section_value.items()):
-                  tmp[value_key] = value
-
-                  if isinstance(value, str) and value[0:1] != "/" and "/" in value:
-                     tmp[value_key] = os.path.join(self.__base_path, value)
-
-               output[section_key] = tmp
-      else:
-         return config
-
-      return output
 
    def __process_config(self, key, value, config_type):
       if isinstance(value, list):

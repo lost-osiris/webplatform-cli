@@ -12,7 +12,8 @@ setup(name = "webplatform-cli",
       'docker',
       'pymongo',
       'docopt',
-      'pytz'
+      'pytz',
+      'twine'
    ],
    python_requires='>=3',
    license='MIT',

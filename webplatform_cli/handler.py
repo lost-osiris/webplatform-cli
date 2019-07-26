@@ -33,31 +33,28 @@ class ContainerHandler:
 
    def run_service(self, service, action):
       check = self.check_running(service)
+      
       if type(check) is list:
          for check_container in check:
             container = self.__eval_container(check_container['container'], service, action, node=check_container['node'])
 
-            service_name = "%s_%s" % (service, check_container['node'])
             if container and "exited" in container.status and action != "stop":
-               print("Service ('%s') has encounter an error, either rebuild the container or start the container using the '-f' |'--force' flag." % service_name)
+               print("Service ('%s') has encounter an error, either rebuild the container or start the container using the '-f' |'--force' flag." % service)
 
       else:
          container = self.__eval_container(check, service, action)
-         service_name = service
+
          if container and "exited" in container.status and action != "stop":
-            print("Service ('%s') has encounter an error, either rebuild the container or start the container using the '-f' |'--force' flag." % service_name)
+            print("Service ('%s') has encounter an error, either rebuild the container or start the container using the '-f' |'--force' flag." % service)
 
    def __eval_container(self, container, service, action, node=False):
-      service_name = service
-      if node:
-         service_name = "%s_%s" % (service, node)
 
       running = False
       # error = False
       has_script = False
 
       if container and "exited" in container.status and action == "stop":
-         print("Service '%s' is already stopped." % service_name)
+         print("Service '%s' is already stopped." % service)
          sys.exit()
 
       elif container and ("running" in container.status or "created" in container.status):
@@ -146,18 +143,10 @@ class ContainerHandler:
             sys.exit()
 
       if has_script:
-         print("Found '%s' script for '%s' container.\nContainer output.\n" % (action, service))
+         print("Found '%s' script for '%s' container.\nContainer output." % (action, service))
 
-         cmd = '%s %s' % new_action[action]['cmd']
-         output = container.exec_run(cmd, stream=True)
-
-         try:
-            for line in output:
-               print(line.decode("utf-8")[:-1])
-
-            print("\nFinished excuting '%s' action on '%s'" % (action, service))
-         except KeyboardInterrupt:
-            sys.exit()
+         result = container.exec_run(new_action[action]['cmd'])
+         print(result.output.decode("utf-8")[:-1])
 
       else:
          print("Container '%s' has no '%s' script." % (service, action))
@@ -170,55 +159,30 @@ class ContainerHandler:
       return container
 
    def create_network(self):
-      network = self.client.networks.create(name="webplatform")
-      return network
+      return self.client.networks.create(name="webplatform")
 
    def create_container(self, service, node=False):
-      # base_path = self.settings.get_path()
-
-      service = service.replace("-", "_")
-      if node:
-         service = "%s_%s" % (service, node)
-
       network = self.check_network()
+
       if network == None:
          network = self.create_network()
-
-      settings = self.settings.get_config(service)
-
-      if node:
-         settings = settings[node]
 
       return create.container(self.client, network, service)
 
    def check_running(self, service):
-      services = self.settings.get_service(service=service)
-
-      if type(services) is list:
-         containers = []
-         for i in services:
-            found = False
-            name = "webplatform-%s_%s" % (service, i)
-            for container in self.client.containers.list(all=True):
-               if name in container.name:
-                  containers.append({'container': container, 'node': i})
-                  found = True
-
-            if not found:
-               containers.append({'container': False, 'node': i})
-
-         return containers
-
-      else:
-         name = "webplatform-%s" % service
-         for container in self.client.containers.list(all=True):
-            if name in container.name:
-               return container
-         return False
+      name = "webplatform-%s" % service
+      
+      for container in self.client.containers.list(all=True):
+         if name in container.name:
+            return container
+      
+      return False
 
    def check_network(self):
       name = "webplatform"
+      
       for network in self.client.networks.list():
          if name in network.name:
             return network
+      
       return None

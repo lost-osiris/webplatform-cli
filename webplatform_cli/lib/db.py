@@ -38,14 +38,27 @@ class Manager(object):
          self.user = user
 
    def __set_class(self):
-      controller_path = os.path.dirname(os.path.realpath(__file__))
-      path = os.path.abspath(os.path.join(controller_path, ".."))
-
-      Manager.settings = Settings(path=path, verify=False)
+      Manager.settings = Settings(path="/home/container/webplatform_cli", verify=False)
       Manager.config = Manager.settings.get_config("mongodb")
 
-      Manager.db_host = Manager.settings.get_config("mongodb")['host']
-      Manager.db_port = Manager.settings.get_config("mongodb")['port']
+      if Manager.config:
+         port = None
+
+         for k in Manager.config['container']['ports']:
+            v = Manager.config['container']['ports'][k]
+            
+            if isinstance(v, int):
+               port = v
+               break
+
+         if not port:
+            port = 27017
+
+         Manager.db_host = Manager.config['container']['name']
+         Manager.db_port = port
+      else:
+         Manager.db_host = "mongodb"
+         Manager.db_port = 27017 
 
       Manager.mongo_client = MongoClient(Manager.db_host, Manager.db_port, connect=False)
 

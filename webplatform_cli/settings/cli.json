@@ -1,6 +1,6 @@
 
 {
-  "services": ["mongodb", "flask", "webpack"],
+  "services": ["mongodb", "flask", "webpack", "nginx"],
   "paths": {
     "rel": true,
     "path": "/lib"

@@ -1,9 +1,11 @@
 from docker import APIClient
-import os
+import os, webplatform_cli
 
 client = APIClient(base_url="unix://var/run/docker.sock")
 
-def run(service, path, force=False):
+def run(service, force=False):
+   path = os.path.dirname(webplatform_cli.__file__)
+   
    image_name = 'webplatform-base:latest'
 
    print("Building base image.")
@@ -11,8 +13,8 @@ def run(service, path, force=False):
       'nocache': force,
       'decode': True,
       'forcerm': True,
-      'path': path,
-      'dockerfile': path + "/Dockerfile",
+      'path': path + "/docker/base/",
+      'dockerfile': path + "/docker/base/Dockerfile",
       'rm': True,
       'tag': image_name,
       # 'container_limits': {

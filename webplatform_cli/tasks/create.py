@@ -1,5 +1,5 @@
 from ..containers import main
-import json
+import os, webplatform_cli
 
 
 def container(client, network, service):
@@ -24,6 +24,10 @@ def container(client, network, service):
          "bind": "/home/container/config",
          "mode": "rw",
       },
+      "%s" % os.path.dirname(webplatform_cli.__file__): {
+         "bind": "/home/container/webplatform_cli",
+         "mode": "rw",
+      },
    }
 
    if "volumes" in settings['container']:
@@ -34,7 +38,7 @@ def container(client, network, service):
          }
 
    volumes = main.add_volumes(volumes)
-   print(volumes)
+
    kwargs = {
       **settings['container'],
       "image": "webplatform-base:latest",
@@ -43,6 +47,7 @@ def container(client, network, service):
       "environment": environment,
       "name": name,
       "volumes": volumes,
+      # "command": "/home/container/entry.sh",
       "command": "/home/container/actions/entry.sh",
    }
 

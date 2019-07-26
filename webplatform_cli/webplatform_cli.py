@@ -1,16 +1,16 @@
 """usage:
    webplatform-cli [ --force --debug ] <command> [<args>...]
-   webplatform-cli [ --force --debug --base-path <base-path> ] <command> [<args>...]
+   webplatform-cli [ --force --debug  --base-path <base-path> ] <command> [<args>...]
    webplatform-cli (--version | --help)
 
-options:
-   -h --help                            Print this help message
-   --version                            Show version
-   -p --base-path                       Specify a base path for all container 
-                                        setup to run off of
-   -f --force                           Force the action being preformed
-   -d --debug                           Enable controller debugging mode,
-                                        for controller development only
+Options:
+   -h --help                                Print this help message
+   --version                                Show version
+   -b <base-path>, --base-path <base-path>  Specify a base path for all container 
+      >                                    setup to run off of
+   -f --force                               Force the action being preformed
+   -d --debug                               Enable controller debugging mode,
+                                            for controller development only
 
 commands for the controller are:
    setup        Build containters
@@ -56,8 +56,8 @@ def main():
       sys.stderr.write(__doc__)
       sys.exit(1)
 
-   if args['<base-path>']:
-      base_path = os.path.abspath(os.path.join(args['<base-path>']))
+   if args['--base-path']:
+      base_path = os.path.abspath(os.path.join(args['--base-path']))
 
    settings = Settings(path=base_path)
 
