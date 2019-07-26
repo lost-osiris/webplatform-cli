@@ -53,12 +53,10 @@ def main():
    from lib.config import Settings
    from docopt import docopt
 
-   print(sys.argv)
    args = docopt(__doc__,
                version='Web Platform CLI Version 1.0.3',
                options_first=True)
 
-   print(args)
    if not args['<command>'] in list(cmd.keys()):
       sys.stderr.write(__doc__)
       sys.exit(1)
