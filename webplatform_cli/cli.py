@@ -19,6 +19,7 @@ commands for the controller are:
    stop         Stop
    restart      Restart
    reset        Reset
+   config       Commands for setting or getting config
 
 See 'webplatform-cli <command> -h' for more information on a specific command.
 """
@@ -33,6 +34,7 @@ cmd = {
    'restart':{'type':'service','headless':True},
    'stop':{'type':'service','headless':True},
    'reset':{'type':'service','headless':True},
+   'config':{'type':'config','headless':True},
 }
 
 def main():
@@ -66,26 +68,42 @@ def main():
 
    settings = Settings(path=base_path)
 
-   from Docker import Docker
+   from Handler import CLI
 
-   import commands_parser as parser
-   subargs = getattr(parser, 'docopt_%s' % (cmd[args['<command>']]['type'],))(args['<command>'], args['<args>'])
+   import Parser
+   subargs = getattr(Parser, 'docopt_%s' % (cmd[args['<command>']]['type'],))(args['<command>'], args['<args>'])
 
    ctrl = {}
 
    if cmd[args['<command>']]['type'] == 'noargs':
       ctrl['params'] = []
+
    elif cmd[args['<command>']]['type'] == 'run':
       ctrl['params'] = []
       for i in args['<args>']:
          if i != "run":
             ctrl['params'].append(i)
+
+   elif cmd[args['<command>']]['type'] == 'config':
+      kwargs = {
+         "command": subargs['<command>'], 
+         "service": subargs['<service>']
+      }
+
+      if subargs['--config']:
+         kwargs['path'] = subargs['<config>']
+
+      if subargs['--default']:
+         kwargs['default'] = subargs['--default']
+
+      ctrl['params'] = kwargs
+   
    else:
       ctrl['params'] = subargs['<args>']
 
    ctrl['command'] = args['<command>']
 
-   controller = Docker(settings, debug=args['--debug'], force=args['--force'])
+   controller = CLI(settings, debug=args['--debug'], force=args['--force'])
    controller.parse_args(**ctrl)
 
 if __name__ == "__main__":
