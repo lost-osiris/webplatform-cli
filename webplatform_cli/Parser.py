@@ -10,7 +10,7 @@ def docopt_config(command, argv):
    valid_args = sorted(services + ["cli"])
    args_doc = '\n   '.join(valid_args)
    doc = """usage: 
-   webplatform-cli <command> <service> --config <config>
+   webplatform-cli <command> <service> --path <path>
    webplatform-cli <command> <service> --default
    webplatform-cli <command> [<service>]
 
@@ -27,7 +27,7 @@ the following are valid services with configs:
    
    args = docopt(doc, argv=argv)
 
-   if args['<command>'] == 'set' and not args['--config'] and not args['--default']:
+   if args['<command>'] == 'set' and not args['--path'] and not args['--default']:
       sys.stderr.write(doc)
       sys.exit(1)
 

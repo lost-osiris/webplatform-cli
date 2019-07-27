@@ -90,8 +90,8 @@ def main():
          "service": subargs['<service>']
       }
 
-      if subargs['--config']:
-         kwargs['path'] = subargs['<config>']
+      if subargs['--path']:
+         kwargs['path'] = subargs['<path>']
 
       if subargs['--default']:
          kwargs['default'] = subargs['--default']

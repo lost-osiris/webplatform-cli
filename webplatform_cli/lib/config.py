@@ -225,25 +225,18 @@ class Settings(object):
 
       if config_type is not None and config_type in list(self.__config.keys()):
          for key, value in list(self.__config[config_type].items()):
-            output[key] = value
-
-            if (isinstance(value, str) and value[0] == "/") or (isinstance(value, dict)):
-               output_key, output_value = self.__process_config(key, value, config_type)
-               output[output_key] = output_value
+            output_key, output_value = self.get_config_output(key, value, key)
+            output[output_key] = output_value
 
          return output
 
       else:
- 
          for config_type in list(self.__config.keys()):
             tmp = {}
 
             for key, value in list(self.__config[config_type].items()):
-               tmp[key] = value
-
-               if (isinstance(value, str) and value[0] == "/") or (isinstance(value, dict)):
-                  output_key, output_value = self.__process_config(key, value, config_type)
-                  tmp[output_key] = output_value
+               output_key, output_value = self.get_config_output(key, value, config_type)
+               tmp[output_key] = output_value
 
             output[config_type] = tmp
 
@@ -251,61 +244,57 @@ class Settings(object):
 
       return self.__config
 
+   def get_config_output(self, key, value, config_type):
+      if isinstance(value, dict):
+         if "rel" in value or "abs" in value:
+            return self.__process_config(key, value, config_type)
+         
+         else:         
+            output = {}
+         
+            for k, v in value.items():
+               new_key, new_value = self.get_config_output(k, v, config_type)
+
+               output[new_key] = new_value
+
+            return key, output
+
+      elif isinstance(value, list):
+         output = []
+
+         for v in value:
+            new_key, new_value = self.get_config_output(key, v, config_type)
+
+            output.append(new_value)
+         
+         return key, output
+
+      else:
+         return key, value
+
    def __process_config(self, key, value, config_type):
-      if isinstance(value, list):
-         parsed_path = []
 
-         for i in value:
-            path = os.path.abspath(os.path.join(self.__base_path, i))
-            parsed_path.append(path)
+      path = value['path']
 
-            if self.verify:
-               if value.get("verify") in (None, True) and not os.path.exists(path) and "pid" not in path and ("log" not in path and "debug" not in path):
-                  try:
-                     raise FileDoesNotExist(key, path, config_type)
-
-                  except FileDoesNotExist as e:
-                     print(e.value)
-                     sys.exit()
-
-         output_value = " ".join(parsed_path)
-
-      elif isinstance(value, dict) and ("rel" in value or "abs" in value):
-         output_value = value['path']
-
-         path = None
-
-         if "rel" in value:
-            if len(output_value) > 1:
-               path = os.path.abspath(os.path.join(self.__base_path, output_value))
-
-            else:
-               path = os.path.abspath(self.__base_path)
-
-         else:
-            path = os.path.abspath(output_value)
-
-            if self.verify:
-               if value.get("verify") in (None, True) and not os.path.exists(path) and "pid" not in path:
-                  try:
-                     raise FileDoesNotExist(key, path, config_type)
-
-                  except FileDoesNotExist as e:
-                     print(e)
-                     sys.exit()
-
-         output_value = path
-
-         value = output_value
+      if "~" in value['path']:
+         path = os.path.expanduser(value['path'])
       
-      elif isinstance(value, dict):
-         new_value = {}
-         for k, v in value.items():
-            new_key, new_value[new_key] = self.__process_config(k, v, config_type)
+      elif "rel" in value:
+         path = os.path.abspath(os.path.join(self.__base_path, path))
 
-         return key, new_value
+      else:
+         path = os.path.abspath(path)
 
-      return key, value
+         if self.verify:
+            if value.get("verify") in (None, True) and not os.path.exists(path) and "pid" not in path:
+               try:
+                  raise FileDoesNotExist(key, path, config_type)
+
+               except FileDoesNotExist as e:
+                  print(e)
+                  sys.exit()
+
+      return key, path
 
    def get_environ_set(self, **kwargs):
       environ = {}
