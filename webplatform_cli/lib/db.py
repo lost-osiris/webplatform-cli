@@ -31,11 +31,8 @@ class Manager(object):
 
       return Manager.__instance
 
-   def __init__(self, db=None, new_client=False, user=None):
+   def __init__(self, db=None, new_client=False):
       self.setup(db)
-
-      if user:
-         self.user = user
 
    def __set_class(self, port=None, host=None):
       controller_path = os.path.dirname(os.path.realpath(__file__))
@@ -63,7 +60,10 @@ class Manager(object):
          Manager.db_host = "mongodb"
          Manager.db_port = 27017 
 
-      Manager.mongo_client = MongoClient(Manager.db_host, Manager.db_port, connect=False)
+      if "WEBPLATFORM_AUTH_DEVEL" in os.environ:
+         Manager.mongo_client = MongoClient("localhost", 27017, connect=False)
+      else:
+         Manager.mongo_client = MongoClient(Manager.db_host, Manager.db_port, connect=False)
 
    def setup(self, db):
       self.mongo_client = Manager.mongo_client
@@ -88,10 +88,6 @@ class Manager(object):
    def drop_database(self, db):
       self.mongo_client.drop_database(db)
 
-   def get_picture_url(self, email):
-      email = email.encode('utf-8')
-      return "https://secure.gravatar.com/avatar/" + hashlib.md5(email).hexdigest() + "?s=100&d=identicon"
-
    def set_hostname(self, hostname):
       self.host = hostname
       Manager.host = hostname
@@ -104,10 +100,10 @@ class Manager(object):
       return self.http_port
 
    def get_user_uid(self):
-      return self.user.get_id()
+      return self.session.user.get_uid()
 
    def get_user(self):
-      return self.user.get()
+      return self.session.user.get()
 
    def parse_cursor_object(self, cursor):
       if cursor == None or cursor == "":

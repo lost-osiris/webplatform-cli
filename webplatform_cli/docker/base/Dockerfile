@@ -3,7 +3,7 @@ LABEL maintainer="Matthew Owens mowens@redhat.com"
 
 WORKDIR /home/root
 
-ADD mongodb-org-3.2.repo /etc/yum.repos.d/
+ADD mongodb-org.repo /etc/yum.repos.d/
 
 RUN dnf groupinstall -y "Development Tools"
 RUN dnf -y install mongodb-org
