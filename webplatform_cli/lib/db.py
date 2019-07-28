@@ -60,7 +60,7 @@ class Manager(object):
          Manager.db_host = "mongodb"
          Manager.db_port = 27017 
 
-      if "WEBPLATFORM_AUTH_DEVEL" in os.environ:
+      if "WEBPLATFORM_DEVEL" in os.environ:
          Manager.mongo_client = MongoClient("localhost", 27017, connect=False)
       else:
          Manager.mongo_client = MongoClient(Manager.db_host, Manager.db_port, connect=False)
