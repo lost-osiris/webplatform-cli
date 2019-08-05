@@ -1,9 +1,4 @@
-try:
-   import simplejson
-except:
-   import json as simplejson
-
-import os, sys, getpass, re
+import os, sys, getpass, re, json
 
 class BaseConfigError(Exception):
    def __init__(self, key, value, config):
@@ -65,7 +60,6 @@ class Settings(object):
       self.__config = Settings.__config
       self.__services = Settings.__services
       self.__bath_path = Settings.__base_path
-      self.build_apps()
 
    def get_variable(self, name):
       keys = self.__get_variable_keys()
@@ -128,11 +122,24 @@ class Settings(object):
       except OSError:
          return actions
 
-   def build_apps(self):
-      apps_dir = self.get_variable("apps-path")
-      # print(apps_dir)
-      apps = os.listdir(apps_dir)
-      # print(apps)
+   def find_app(self, app_name):
+      apps_path = self.get_variable("apps-path")
+      app_dir = os.path.join(apps_path, app_name)      
+      app_has_dir = os.path.isdir(app_dir)
+
+      if app_has_dir:
+         app_config_path = os.path.join(app_dir, "app.json")
+         app_has_config = os.path.isfile(app_config_path)
+
+         if app_has_config:
+            try:
+               return json.load(open(app_config_path)), None
+            except:
+               return False, "json parse error"
+         else:
+            return False, "app no config"
+      else:
+         return False, "no app dir"
 
 
    def list_applications(self):
@@ -180,7 +187,7 @@ class Settings(object):
       try:
          with open(path) as target:
             try:
-               return simplejson.load(target)
+               return json.load(target)
 
             except:
                return {"error": "JSON parsing error"}

@@ -4,6 +4,7 @@
     "path": "~/"
   },
   "applications": [],
+  "applications-configs": [],
   "services": ["mongodb", "nginx"],
   "docker-prefix": "webplatform"
 }
