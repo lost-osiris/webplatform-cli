@@ -1,3 +1,4 @@
+from containers import main
 from docker import APIClient
 import os, webplatform_cli
 
@@ -5,8 +6,9 @@ client = APIClient(base_url="unix://var/run/docker.sock")
 
 def run(service, force=False):
    path = os.path.dirname(webplatform_cli.__file__)
+   prefix = main.settings.get_variable("docker-prefix")
    
-   image_name = 'webplatform-base:latest'
+   image_name = '%s-base:latest' % prefix
 
    print("Building base image.")
    kwargs = {
@@ -17,10 +19,6 @@ def run(service, force=False):
       'dockerfile': path + "/docker/base/Dockerfile",
       'rm': True,
       'tag': image_name,
-      # 'container_limits': {
-      #    'cpusetcpus': '0-4',
-      #    'memory': 1073741824,
-      # }
    }
    for line in client.build(**kwargs):
       if "stream" in line: print(line['stream'])

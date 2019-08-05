@@ -22,6 +22,7 @@ class ContainerHandler:
 
       self.services = self.settings.get_service()
       self.client = client
+      self.docker_prefix = self.settings.get_variable("docker-prefix")
 
    def run(self, action):
       run = getattr(self, action, None)
@@ -159,7 +160,7 @@ class ContainerHandler:
       return container
 
    def create_network(self):
-      return self.client.networks.create(name="webplatform")
+      return self.client.networks.create(name=self.prefix)
 
    def create_container(self, service, node=False):
       network = self.check_network()
@@ -170,7 +171,7 @@ class ContainerHandler:
       return create.container(self.client, network, service)
 
    def check_running(self, service):
-      name = "webplatform-%s" % service
+      name = "%s-%s" % (self.docker_prefix, service)
       
       for container in self.client.containers.list(all=True):
          if name in container.name:
@@ -179,10 +180,8 @@ class ContainerHandler:
       return False
 
    def check_network(self):
-      name = "webplatform"
-      
       for network in self.client.networks.list():
-         if name in network.name:
+         if self.docker_prefix in network.name:
             return network
       
       return None

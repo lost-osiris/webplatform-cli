@@ -1,5 +1,4 @@
 {
-  "num_cores": 1,
   "host": "localhost",
   "container": {
     "name": "mongodb",
@@ -7,6 +6,6 @@
       "27017": 27017
     },
     "user": "mongodb",
-    "mem_limit": "8g"
+    "mem_limit": "1g"
   }
 }

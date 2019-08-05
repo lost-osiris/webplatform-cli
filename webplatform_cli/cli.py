@@ -1,16 +1,15 @@
 """usage:
-   webplatform-cli [ --force --debug ] <command> [<args>...]
    webplatform-cli [ --force --debug  --base-path <base-path> ] <command> [<args>...]
    webplatform-cli (--version | --help)
 
 Options:
-   -h --help                                Print this help message
-   --version                                Show version
-   -b <base-path>, --base-path <base-path>  Specify a base path for all container 
-                                            setup to run off of
-   -f --force                               Force the action being preformed
-   -d --debug                               Enable controller debugging mode,
-                                            for controller development only
+   -h --help                Print this help message
+   --version                Show version
+   --base-path <base-path>  Specify a base path for all container 
+                            setup to run off of
+   -f --force               Force the action being preformed
+   -d --debug               Enable controller debugging mode,
+                            for controller development only
 
 commands for the controller are:
    setup        Build containters
@@ -20,6 +19,8 @@ commands for the controller are:
    restart      Restart
    reset        Reset
    config       Commands for setting or getting config
+   variables    Commands for setting webplatform variables
+   apps         Commands for interfacing with application configuration
 
 See 'webplatform-cli <command> -h' for more information on a specific command.
 """
@@ -28,14 +29,16 @@ import sys
 
 sys.dont_write_bytecode = True
 
-cmd = {
-   'setup':{'type':'noargs','headless':False},
-   'start':{'type':'service','headless':True},
-   'restart':{'type':'service','headless':True},
-   'stop':{'type':'service','headless':True},
-   'reset':{'type':'service','headless':True},
-   'config':{'type':'config','headless':True},
-}
+commands = [
+   "setup",
+   "start",
+   "stop",
+   "restart",
+   "variables",
+   "apps",
+   "config",
+   "reset"
+]
 
 def main():
    controller_path = os.path.dirname(os.path.realpath(__file__))
@@ -59,7 +62,7 @@ def main():
                version='Web Platform CLI Version 1.0.3',
                options_first=True)
 
-   if not args['<command>'] in list(cmd.keys()):
+   if not args['<command>'] in commands:
       sys.stderr.write(__doc__)
       sys.exit(1)
 
@@ -69,41 +72,16 @@ def main():
    settings = Settings(path=base_path)
 
    from Handler import CLI
-
    import Parser
-   subargs = getattr(Parser, 'docopt_%s' % (cmd[args['<command>']]['type'],))(args['<command>'], args['<args>'])
 
-   ctrl = {}
+   options = {
+      'debug': args['--debug'],
+      'force': args['--force'],
+   }
 
-   if cmd[args['<command>']]['type'] == 'noargs':
-      ctrl['params'] = []
-
-   elif cmd[args['<command>']]['type'] == 'run':
-      ctrl['params'] = []
-      for i in args['<args>']:
-         if i != "run":
-            ctrl['params'].append(i)
-
-   elif cmd[args['<command>']]['type'] == 'config':
-      kwargs = {
-         "command": subargs['<command>'], 
-         "service": subargs['<service>']
-      }
-
-      if subargs['--path']:
-         kwargs['path'] = subargs['<path>']
-
-      if subargs['--default']:
-         kwargs['default'] = subargs['--default']
-
-      ctrl['params'] = kwargs
+   ctrl = Parser.parser(args['<command>'], args['<args>'], **options)
    
-   else:
-      ctrl['params'] = subargs['<args>']
-
-   ctrl['command'] = args['<command>']
-
-   controller = CLI(settings, debug=args['--debug'], force=args['--force'])
+   controller = CLI(settings, **options)
    controller.parse_args(**ctrl)
 
 if __name__ == "__main__":

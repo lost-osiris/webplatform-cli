@@ -1,0 +1,9 @@
+{
+  "apps-path": {
+    "rel": true,
+    "path": "~/"
+  },
+  "applications": [],
+  "services": ["mongodb", "nginx"],
+  "docker-prefix": "webplatform"
+}

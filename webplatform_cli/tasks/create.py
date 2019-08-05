@@ -5,8 +5,9 @@ import os, webplatform_cli
 def container(client, network, service):
    base_path = main.base_path
    settings = main.settings.get_config(service)
+   prefix = main.settings.get_variable("docker-prefix")
 
-   name = "webplatform-%s" % service
+   name = "%s-%s" % (prefix, service)
    num_cores = main.settings.get_num_cores(service, get_range=True)
 
    environment = main.get_environment(service)
@@ -28,6 +29,10 @@ def container(client, network, service):
          "bind": "/home/container/webplatform_cli",
          "mode": "rw",
       },
+      "%s" % variables['apps-path']: {
+         "bind": "/home/container/applications",
+         "mode": "rw",
+      },
    }
 
    if "volumes" in settings['container']:
@@ -41,13 +46,12 @@ def container(client, network, service):
 
    kwargs = {
       **settings['container'],
-      "image": "webplatform-base:latest",
+      "image": "%s-base:latest" % prefix,
       "hostname": service,
       "tty": True,
       "environment": environment,
       "name": name,
       "volumes": volumes,
-      # "command": "/home/container/entry.sh",
       "command": "/home/container/actions/entry.sh",
    }
 

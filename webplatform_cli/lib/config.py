@@ -65,6 +65,19 @@ class Settings(object):
       self.__config = Settings.__config
       self.__services = Settings.__services
       self.__bath_path = Settings.__base_path
+      self.build_apps()
+
+   def get_variable(self, name):
+      keys = self.__get_variable_keys()
+
+      if name not in keys:
+         print("Variable name '%s' is not a valid variable" % name)
+         return None
+
+      return self.get_config("variables")[name]
+
+   def __get_variable_keys(self):
+      return self.get_config("variables").keys()
 
    def get_service(self, service=None):
       if service != None:
@@ -114,6 +127,13 @@ class Settings(object):
 
       except OSError:
          return actions
+
+   def build_apps(self):
+      apps_dir = self.get_variable("apps-path")
+      # print(apps_dir)
+      apps = os.listdir(apps_dir)
+      # print(apps)
+
 
    def list_applications(self):
       return self.__config['cli']['applications']

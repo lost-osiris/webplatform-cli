@@ -1,9 +1,0 @@
-{
-  "services": ["mongodb", "nginx", "auth"],
-  "paths": {
-    "rel": true,
-    "path": "/lib"
-  },
-  "setup-npm": "setup_npm.sh",
-  "applications": []
-}
