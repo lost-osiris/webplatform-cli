@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name = "webplatform-cli",
-   version = "1.2.0",
+   version = "1.2.1",
    description = "CLI used for a webplatform",
    author = "Matthew Owens",
    author_email = "mowens@redhat.com",
