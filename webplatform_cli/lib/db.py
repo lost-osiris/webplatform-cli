@@ -117,7 +117,7 @@ class Manager(object):
       return cursor
 
    def get_application(self, module=None, app=None):
-      applications = self.settings.get_config("cli")['applications']
+      applications = self.settings.get_variable("applications")
 
       if app is not None:
          for a in applications:
@@ -130,7 +130,7 @@ class Manager(object):
             return applications
 
          for app in applications:
-            if app['module_base'] == module.split(".")[0]:
+            if app['api']['name'] == module.split(".")[0]:
                return app['name']
 
          return "system"

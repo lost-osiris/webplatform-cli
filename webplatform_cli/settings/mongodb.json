@@ -5,6 +5,12 @@
     "ports": {
       "27017": 27017
     },
+    "volumes": {
+      "service": {
+        "rel": true,
+        "path": "~/mongodb"
+      }
+    },
     "user": "mongodb",
     "mem_limit": "1g"
   }

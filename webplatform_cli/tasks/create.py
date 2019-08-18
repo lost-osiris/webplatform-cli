@@ -6,6 +6,7 @@ def container(client, network, service):
    base_path = main.base_path
    settings = main.settings.get_config(service)
    prefix = main.settings.get_variable("docker-prefix")
+   apps_path = main.settings.get_variable("apps-path")
 
    name = "%s-%s" % (prefix, service)
    num_cores = main.settings.get_num_cores(service, get_range=True)
@@ -29,7 +30,7 @@ def container(client, network, service):
          "bind": "/home/container/webplatform_cli",
          "mode": "rw",
       },
-      "%s" % variables['apps-path']: {
+      "%s" % apps_path: {
          "bind": "/home/container/applications",
          "mode": "rw",
       },

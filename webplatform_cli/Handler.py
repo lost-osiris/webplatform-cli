@@ -167,7 +167,7 @@ class CLI(object):
             print("Application requested '%s' to remove doesn't exist" % app)
          else:
             new_apps_configs = [i for i in apps_configs if i['app-dir-name'] != app]
-            new_apps = [i for i in apps if i == app]
+            new_apps = [i for i in apps if i != app]
 
             self.parse_variables(command="set", variable="applications", value=new_apps)
             self.parse_variables(command="set", variable="applications-configs", value=new_apps_configs)

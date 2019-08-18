@@ -143,7 +143,7 @@ class Settings(object):
 
 
    def list_applications(self):
-      return self.__config['cli']['applications']
+      return self.get_variable("applications")
 
    def __find_configs(self):
       path = "%s/settings/" % self.__base_path

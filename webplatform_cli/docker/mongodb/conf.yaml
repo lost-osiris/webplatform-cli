@@ -2,6 +2,6 @@ net:
    bindIp: 0.0.0.0,
    port: 27017
 storage:
-   dbPath: /home/container/data
+   dbPath: /home/container/service
    journal:
       enabled: true
