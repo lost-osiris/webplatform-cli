@@ -117,7 +117,7 @@ class Manager(object):
       return cursor
 
    def get_application(self, module=None, app=None):
-      applications = self.settings.get_variable("applications")
+      applications = self.settings.get_variable("applications-configs")
 
       if app is not None:
          for a in applications:

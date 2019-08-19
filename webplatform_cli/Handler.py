@@ -146,10 +146,10 @@ class CLI(object):
             self.parse_variables(command="set", variable="applications", value=apps)
             self.parse_variables(command="set", variable="applications-configs", value=apps_configs)
 
-         print(", ".join(apps))
+         print(",".join(apps))
 
       elif command == "list":
-         print(", ".join(current_value))
+         print(",".join(current_value))
          sys.exit(1)
       
       elif command in ["enable", "disable"]:
