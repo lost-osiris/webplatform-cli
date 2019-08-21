@@ -1,6 +1,6 @@
 """usage:
-   webplatform-cli [ --force --debug  --base-path <base-path> ] <command> [<args>...]
-   webplatform-cli (--version | --help)
+   app-init [ --force --debug  --base-path <base-path> ] <command> [<args>...]
+   app-init (--version | --help)
 
 Options:
    -h --help                Print this help message
@@ -22,7 +22,7 @@ commands for the controller are:
    variables    Commands for setting webplatform variables
    apps         Commands for interfacing with application configuration
 
-See 'webplatform-cli <command> -h' for more information on a specific command.
+See 'app-init' <command> -h' for more information on a specific command.
 """
 import os
 import sys
@@ -59,7 +59,7 @@ def main():
    from docopt import docopt
 
    args = docopt(__doc__,
-               version='Web Platform CLI Version 1.0.3',
+               version='App Init CLI Version 1.0.3',
                options_first=True)
 
    if not args['<command>'] in commands:

@@ -1,0 +1,3 @@
+app-init-auth==1.0.0
+app-init-backend==1.0.0
+app-init-cli==1.0.0

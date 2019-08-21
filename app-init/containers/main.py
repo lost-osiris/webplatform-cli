@@ -21,5 +21,5 @@ def get_environment(service):
    return {
       #doesn't work on mac
       # "HOST_MACHINE": socket.gethostbyname(socket.gethostname()),
-      "WEBPLATFORM_SERVICE": service,
+      "APP_INIT_SERVICE": service,
    }

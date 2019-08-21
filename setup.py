@@ -1,11 +1,11 @@
 from setuptools import setup, find_packages
 
-setup(name = "webplatform-cli",
-   version = "1.2.1",
+setup(name = "app-init-cli",
+   version = "1.0.0",
    description = "CLI used for a webplatform",
    author = "Matthew Owens",
    author_email = "mowens@redhat.com",
-   url = "https://github.com/lost-osiris/webplatform-cli",
+   url = "https://github.com/app-init/cli",
    packages = find_packages(exclude=('db')),
    include_package_data = True,
    install_requires = [
@@ -18,9 +18,8 @@ setup(name = "webplatform-cli",
    python_requires='>=3',
    license='MIT',
    entry_points={
-       "console_scripts": ["webplatform-cli=webplatform_cli.cli:main"]
+       "console_scripts": ["app-init=app-init.cli:main"]
    },
-   #scripts = ["webplatform_cli/webplatform-cli"],
    long_description = """TODO""",
    classifiers = [
        "Programming Language :: Python :: 3",

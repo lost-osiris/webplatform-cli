@@ -10,9 +10,9 @@ def config(command, argv):
    valid_args = sorted(services + ["cli"])
    args_doc = '\n   '.join(valid_args)
    doc = """usage: 
-   webplatform-cli <command> <service> --path <path>
-   webplatform-cli <command> <service> --default
-   webplatform-cli <command> [<service>]
+   app-init <command> <service> --path <path>
+   app-init <command> <service> --default
+   app-init <command> [<service>]
 
 commands allowed on config (all commands a service must be specified)
    set       Set the config file to be used for a given service.
@@ -38,9 +38,9 @@ the following are valid services with configs:
 
 def variables(command, argv):
    doc = """usage: 
-   webplatform-cli variables set <variable-key> <value>
-   webplatform-cli variables get <variable-key>
-   webplatform-cli variables get
+   app-init variables set <variable-key> <value>
+   app-init variables get <variable-key>
+   app-init variables get
 
 list of variables you have access to get and set
    apps-path         Directory where applications are stored.
@@ -55,8 +55,8 @@ list of variables you have access to get and set
 
 def apps(command, argv):
    doc = """usage: 
-   webplatform-cli apps <app-command> <app-name>
-   webplatform-cli apps <app-command>
+   app-init apps <app-command> <app-name>
+   app-init apps <app-command>
 
 list of commands to be run against apps
    add               Add an application to webplatform.
@@ -81,7 +81,7 @@ def service(command, argv):
    valid_args = set(services)
    args_doc = '\n   '.join(sorted(valid_args))
    doc = """usage:
-   webplatform-ctl [options] %s [<args>...]
+   app-init [options] %s [<args>...]
 
 options:
    -h --help     Print this help message
@@ -100,7 +100,7 @@ options:
 def noargs(command, argv):
    argv.insert(0,command)
    doc = """usage:
-   webplatform-ctl [options] %s
+   app-init [options] %s
 
 options:
    -h --help     Print this help message
