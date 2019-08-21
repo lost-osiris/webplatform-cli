@@ -74,7 +74,7 @@ class Manager(object):
       if db != None:
          self.__db = Manager.mongo_client[db]
       else:
-         self.__db = Manager.mongo_client["webplatform"]
+         self.__db = Manager.mongo_client["appinit"]
 
    def db(self, db=None):
       if db == None:

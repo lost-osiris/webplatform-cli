@@ -6,5 +6,5 @@
   "applications": [],
   "applications-configs": [],
   "services": ["mongodb", "nginx"],
-  "docker-prefix": "app-init"
+  "docker-prefix": "appinit"
 }

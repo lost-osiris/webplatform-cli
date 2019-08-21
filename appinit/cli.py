@@ -1,6 +1,6 @@
 """usage:
-   app-init [ --force --debug  --base-path <base-path> ] <command> [<args>...]
-   app-init (--version | --help)
+   appinit [ --force --debug  --base-path <base-path> ] <command> [<args>...]
+   appinit (--version | --help)
 
 Options:
    -h --help                Print this help message

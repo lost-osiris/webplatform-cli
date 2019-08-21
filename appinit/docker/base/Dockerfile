@@ -52,12 +52,13 @@ RUN pip3 install -r /home/container/platform-requirements.txt
 RUN mkdir /home/container/.npm-global
 RUN npm config set prefix '/home/container/npm-global'
 
-ENV PATH "${PATH}:/home/container/npm-global/bin:/home/container/webplatform_cli/"
+ENV PATH "${PATH}:/home/container/npm-global/bin:/home/container/appinit/"
 
 # Setup base npm
 RUN npm install -g n
 RUN n latest
-RUN npm install -g --unsafe-perm webplatform-frontend
+RUN npm install -g yarn
+RUN yarn add -g @app-init/frontend
 
 # ADD entry.sh /home/container/
 
@@ -65,7 +66,7 @@ VOLUME "/home/container/config/"
 VOLUME "/home/container/actions/"
 VOLUME "/home/container/data/"
 VOLUME "/home/container/service/"
-VOLUME "/home/container/webplatform_cli/"
+VOLUME "/home/container/appinit/"
 VOLUME "/home/container/applications/"
 
 WORKDIR /home/container
