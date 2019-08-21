@@ -18,7 +18,7 @@ setup(name = "app-init-cli",
    python_requires='>=3',
    license='MIT',
    entry_points={
-       "console_scripts": ["app-init=app-init.cli:main"]
+       "console_scripts": ["appinit=appinit.cli:main"]
    },
    long_description = """TODO""",
    classifiers = [
